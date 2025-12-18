@@ -33,8 +33,8 @@ This repository contains my academic work from the Fall 2025 semester. It includ
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/fall-2025-coursework.git
-   cd fall-2025-coursework
+   git clone https://github.com/yourusername/School_Fall_2025.git
+   cd School_Fall_2025
    ```
 
 2. Install Python dependencies (recommended to use a virtual environment):
@@ -87,4 +87,3 @@ Feel free to reach out if you have questions about any of the projects or implem
 
 ---
 
-*Last Updated: Fall 2025*
