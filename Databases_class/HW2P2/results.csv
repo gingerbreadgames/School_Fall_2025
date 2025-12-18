@@ -1,0 +1,19 @@
+﻿qid,prompt,model,generated_sql,generated_value,gold_sql,gold_value,error,is_correct
+1,How many teams are in the database?,gpt-oss:20b,SELECT COUNT(*) FROM team;,6.0,SELECT COUNT(*) AS n FROM Team;,6.0,,True
+2,How many players are currently unattached (teamId is NULL)?,gpt-oss:20b,SELECT COUNT(*) FROM player WHERE teamId IS NULL;,1.0,SELECT COUNT(*) AS n FROM Player WHERE teamId IS NULL;,1.0,,True
+3,How many matches have been scheduled in total?,gpt-oss:20b,SELECT COUNT(*) FROM Match;,,SELECT COUNT(*) AS n FROM `Match`;,8.0,"ProgrammingError: (mysql.connector.errors.ProgrammingError) 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Match' at line 1
+[SQL: SELECT COUNT(*) FROM Match;]
+(Background on this error at: https://sqlalche.me/e/20/f405)",False
+4,How many matches have not yet been played (both scores not recorded)?,gpt-oss:20b,SELECT COUNT(*) FROM `Match` WHERE homeGoals IS NULL AND awayGoals IS NULL;,1.0,SELECT COUNT(*) AS n FROM `Match` WHERE homeGoals IS NULL AND awayGoals IS NULL;,1.0,,True
+5,How many distinct players have at least one appearance?,gpt-oss:20b,SELECT COUNT(DISTINCT playerId) FROM appearance;,10.0,SELECT COUNT(DISTINCT playerId) AS n FROM Appearance;,10.0,,True
+6,How many players have participated in two or more appearances?,gpt-oss:20b,SELECT COUNT(*) FROM (SELECT playerId FROM Appearance GROUP BY playerId HAVING COUNT(*) >= 2) AS t;,10.0,"SELECT COUNT(*) AS n FROM (SELECT playerId, COUNT(*) AS c FROM Appearance GROUP BY playerId HAVING COUNT(*) >= 2) AS t;",10.0,,True
+7,What is the total number of goals scored by Real Madrid across all matches (home plus away)?,gpt-oss:20b,"SELECT
+  COALESCE((SELECT SUM(homeGoals) FROM `Match` WHERE homeTeamId = (SELECT teamId FROM Team WHERE name='Real Madrid')),0)
+  + COALESCE((SELECT SUM(awayGoals) FROM `Match` WHERE awayTeamId = (SELECT teamId FROM Team WHERE name='Real Madrid')),0);",3.0,"SELECT COALESCE(SUM(CASE WHEN homeTeamId = 1 THEN homeGoals ELSE 0 END),0) + COALESCE(SUM(CASE WHEN awayTeamId = 1 THEN awayGoals ELSE 0 END),0) AS n FROM `Match`;",3.0,,True
+1,How many teams are in the database?,llama3.1:8b,SELECT COUNT(DISTINCT teamId) FROM Team;,6.0,SELECT COUNT(*) AS n FROM Team;,6.0,,True
+2,How many players are currently unattached (teamId is NULL)?,llama3.1:8b,SELECT COUNT(playerId) FROM Player WHERE teamId IS NULL;,1.0,SELECT COUNT(*) AS n FROM Player WHERE teamId IS NULL;,1.0,,True
+3,How many matches have been scheduled in total?,llama3.1:8b,SELECT COUNT(matchId) FROM `Match`;,8.0,SELECT COUNT(*) AS n FROM `Match`;,8.0,,True
+4,How many matches have not yet been played (both scores not recorded)?,llama3.1:8b,SELECT COUNT(*) FROM `Match` WHERE homeGoals IS NULL AND awayGoals IS NULL;,1.0,SELECT COUNT(*) AS n FROM `Match` WHERE homeGoals IS NULL AND awayGoals IS NULL;,1.0,,True
+5,How many distinct players have at least one appearance?,llama3.1:8b,SELECT COUNT(DISTINCT playerId) FROM Appearance;,10.0,SELECT COUNT(DISTINCT playerId) AS n FROM Appearance;,10.0,,True
+6,How many players have participated in two or more appearances?,llama3.1:8b,SELECT COUNT(DISTINCT playerId) FROM Appearance WHERE minutes > 90;,0.0,"SELECT COUNT(*) AS n FROM (SELECT playerId, COUNT(*) AS c FROM Appearance GROUP BY playerId HAVING COUNT(*) >= 2) AS t;",10.0,,False
+7,What is the total number of goals scored by Real Madrid across all matches (home plus away)?,llama3.1:8b,SELECT 0;,0.0,"SELECT COALESCE(SUM(CASE WHEN homeTeamId = 1 THEN homeGoals ELSE 0 END),0) + COALESCE(SUM(CASE WHEN awayTeamId = 1 THEN awayGoals ELSE 0 END),0) AS n FROM `Match`;",3.0,,False

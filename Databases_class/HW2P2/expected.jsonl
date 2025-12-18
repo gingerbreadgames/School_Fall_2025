@@ -1,0 +1,7 @@
+{"qid": 1, "prompt": "How many teams are in the database?", "sql": "SELECT COUNT(*) AS n FROM Team;"}
+{"qid": 2, "prompt": "How many players are currently unattached (teamId is NULL)?", "sql": "SELECT COUNT(*) AS n FROM Player WHERE teamId IS NULL;"}
+{"qid": 3, "prompt": "How many matches have been scheduled in total?", "sql": "SELECT COUNT(*) AS n FROM `Match`;"}
+{"qid": 4, "prompt": "How many matches have not yet been played (both scores not recorded)?", "sql": "SELECT COUNT(*) AS n FROM `Match` WHERE homeGoals IS NULL AND awayGoals IS NULL;"}
+{"qid": 5, "prompt": "How many distinct players have at least one appearance?", "sql": "SELECT COUNT(DISTINCT playerId) AS n FROM Appearance;"}
+{"qid": 6, "prompt": "How many players have participated in two or more appearances?", "sql": "SELECT COUNT(*) AS n FROM (SELECT playerId, COUNT(*) AS c FROM Appearance GROUP BY playerId HAVING COUNT(*) >= 2) AS t;"}
+{"qid": 7, "prompt": "What is the total number of goals scored by Real Madrid across all matches (home plus away)?", "sql": "SELECT COALESCE(SUM(CASE WHEN homeTeamId = 1 THEN homeGoals ELSE 0 END),0) + COALESCE(SUM(CASE WHEN awayTeamId = 1 THEN awayGoals ELSE 0 END),0) AS n FROM `Match`;"}
